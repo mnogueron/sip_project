@@ -12,9 +12,14 @@ public class Main {
     static char[][] _model;
     static int _coordX, _coordY;
 
-
     static boolean _isPlaying;
 
+    public static boolean collision(){
+        boolean out = false;
+        for(int j = 0; j<4; j++)
+            out = out || ((_model[3][j] == _gridSaved[_coordY][j]) && (_model[3][j] == '+'));
+        return out;
+    }
 
     public static char[][] getModel(int id){
         char [][] model = new char[4][4];
@@ -126,30 +131,23 @@ public class Main {
     }
 
     public static void step(){
-
-        for(int i = 0; i<4; i++){
-            for(int j = 0; j<4; j++){
-                if(i - _coordY -4 == 0){
-                    if (_grid[_coordY][j] != _gridSaved[_coordY][j]) {
-                        if (_grid[_coordY + 1][j] != '+' && _gridSaved[_coordY + 1][j] != '+') {
-                            _grid[_coordY+1][j] = _model[i][j];
-                            _grid[_coordY][j] = '0';
-                        }
-                    }
-                }else if(j - _coordY > 0){
+        if(!collision()){
+            _coordY++;
+            for(int i = 0; i<4; i++){
+                if(_coordY-3+i >= 0)
+                for(int j = 0; j<4; j++){
+                    _grid[_coordY-3+i][_coordX+j] = _model[i][j];
                 }
             }
         }
-        _coordY++;
     }
-
-    public char[][] placeModel(){}
 
     public static void main(String[] args) {
         //System.out.println("Hello world !");
         init();
         //displayGrid();
         insertModel();
+        step();
         step();
         displayGrid();
     }
